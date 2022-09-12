@@ -1,0 +1,85 @@
+version: "3.6"
+
+networks:
+  splunk.lab:
+    driver: bridge
+    attachable: true
+
+services:
+  sh1:
+    networks:
+      splunk.lab:
+        aliases:
+          - sh1
+    image: splunk/splunk:latest
+    hostname: sh1
+    container_name: sh1
+    environment:
+      - SPLUNK_HTTP_ENABLESSL=true
+      - SPLUNK_HTTP_ENABLESSL_PRIVKEY_PASSWORD=abcd1234
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_INDEXER_URL=idx1
+      - SPLUNK_SEARCH_HEAD_URL=sh1
+      - SPLUNK_SEARCH_HEAD_CAPTAIN_URL=sh1
+      - SPLUNK_CLUSTER_MASTER_URL=cm1
+      - SPLUNK_ROLE=splunk_search_head
+      - SPLUNK_DEPLOYER_URL=dep1
+      - SPLUNK_PASSWORD=Password!@!@
+    ports:
+      - 7690:8000
+      - 7790:8089
+      - 7890:8080
+      - 7990:8191 # KV Store
+ 
+
+
+  cm1:
+    networks:
+      splunk.lab:
+        aliases:
+          - cm1
+    image: splunk/splunk:latest
+    hostname: cm1
+    container_name: cm1
+    environment:
+      - SPLUNK_HTTP_ENABLESSL=true
+      - SPLUNK_HTTP_ENABLESSL_PRIVKEY_PASSWORD=abcd1234
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_INDEXER_URL=idx1
+      - SPLUNK_SEARCH_HEAD_URL=sh1
+      - SPLUNK_SEARCH_HEAD_CAPTAIN_URL=sh1
+      - SPLUNK_CLUSTER_MASTER_URL=cm1
+      - SPLUNK_ROLE=splunk_cluster_master
+      - SPLUNK_DEPLOYER_URL=dep1
+      - SPLUNK_PASSWORD=Password!@!@
+    ports:
+      - 7694:8000
+      - 7794:8089
+      - 7894:8080
+      - 7994:8191 # KV Store
+
+  idx1:
+    networks:
+      splunk.lab:
+        aliases:
+          - idx1
+    image: splunk/splunk:latest
+    hostname: idx1
+    container_name: idx1
+    environment:
+      - SPLUNK_HTTP_ENABLESSL=true
+      - SPLUNK_HTTP_ENABLESSL_PRIVKEY_PASSWORD=abcd1234
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_INDEXER_URL=idx1
+      - SPLUNK_SEARCH_HEAD_URL=sh1
+      - SPLUNK_SEARCH_HEAD_CAPTAIN_URL=sh1
+      - SPLUNK_CLUSTER_MASTER_URL=cm1
+      - SPLUNK_ROLE=splunk_indexer
+      - SPLUNK_DEPLOYER_URL=dep1
+      - SPLUNK_PASSWORD=Password!@!@
+    ports:
+      - 7695:8000 #web port
+      - 7795:8089 #Management Port
+      - 7895:8080 #Index Replication Port
+      - 7995:8191 # KV Store
+
