@@ -1,4 +1,4 @@
-# Splunk_lab
+# Splunk-Docker-Lab
 Splunk lab is a highly customizable docker based environment that can be spun on a single device as a training environment. The provided docker-compose file is build off of Splunk 9.0.0. 
 This lab consists of:
   - 1 Cluster Manager
